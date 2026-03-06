@@ -8,6 +8,7 @@ package ui;
 import dao.UsuarioDAO;
 import dto.UsuarioSesionDTO;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author aguil
@@ -17,9 +18,8 @@ public class LoginFrame extends javax.swing.JFrame {
     /**
      * Creates new form LoginFrame
      */
-    
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
-    
+
     public LoginFrame() {
         initComponents();
     }
@@ -40,6 +40,7 @@ public class LoginFrame extends javax.swing.JFrame {
         txtPassword = new javax.swing.JPasswordField();
         btnLogin = new javax.swing.JButton();
         lblStatus = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,6 +64,13 @@ public class LoginFrame extends javax.swing.JFrame {
         });
 
         lblStatus.setText("...");
+
+        jButton1.setText("Crear Cuenta");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -88,11 +96,13 @@ public class LoginFrame extends javax.swing.JFrame {
                         .addComponent(jlabel1)
                         .addGap(182, 182, 182))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnLogin)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(146, 146, 146))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(lblStatus)
-                        .addGap(191, 191, 191))))
+                        .addGap(193, 193, 193))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,9 +119,11 @@ public class LoginFrame extends javax.swing.JFrame {
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnLogin)
-                .addGap(32, 32, 32)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblStatus)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         pack();
@@ -122,49 +134,49 @@ public class LoginFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNicknameActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-String nickname = txtNickname.getText().trim();
-String password = new String(txtPassword.getPassword());
+        String nickname = txtNickname.getText().trim();
+        String password = new String(txtPassword.getPassword());
 
-if (nickname.isEmpty() || password.isEmpty()) {
-    JOptionPane.showMessageDialog(this, "Ingresa nickname y contraseña.");
-    return;
-}
+        if (nickname.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingresa nickname y contraseña.");
+            return;
+        }
 
-UsuarioSesionDTO sesion = usuarioDAO.login(nickname, password);
+        UsuarioSesionDTO sesion = usuarioDAO.login(nickname, password);
 
-if (sesion == null) {
-    // si tienes lblStatus, úsalo; si no, usa JOptionPane
-    // lblStatus.setText("Credenciales inválidas o usuario inactivo.");
-    JOptionPane.showMessageDialog(this, "Credenciales inválidas o usuario inactivo.");
-    return;
-}
+        if (sesion == null) {
+            // si tienes lblStatus, úsalo; si no, usa JOptionPane
+            // lblStatus.setText("Credenciales inválidas o usuario inactivo.");
+            JOptionPane.showMessageDialog(this, "Credenciales inválidas o usuario inactivo.");
+            return;
+        }
 
 // Login correcto -> abrir pantalla según rol
-String rol = sesion.getNombreRol();
+        String rol = sesion.getNombreRol();
 
-switch (rol) {
-    case "SUPER_ADMIN":
-        // new SuperAdminFrame(sesion).setVisible(true);
-        JOptionPane.showMessageDialog(this, "Login OK - SUPER_ADMIN");
-        break;
+        switch (rol) {
+            case "SUPER_ADMIN":
+                new ui.SuperAdminFrame(sesion).setVisible(true);
+                break;
 
-    case "ADMIN_TIENDA":
-        // new AdminTiendaFrame(sesion).setVisible(true);
-        JOptionPane.showMessageDialog(this, "Login OK - ADMIN_TIENDA");
-        break;
+            case "ADMIN_TIENDA":
+                new ui.AdminTiendaFrame(sesion).setVisible(true);
+                break;
 
-    case "JUGADOR":
-        // new JugadorFrame(sesion).setVisible(true);
-        JOptionPane.showMessageDialog(this, "Login OK - JUGADOR");
-        break;
+            case "JUGADOR":
+                new ui.JugadorFrame(sesion).setVisible(true);
+                break;
 
-    default:
-        JOptionPane.showMessageDialog(this, "Rol desconocido: " + rol);
-        return;
-}
+            default:
+                JOptionPane.showMessageDialog(this, "Rol desconocido: " + rol);
+                return;
+        }
 
 // cerrar login después de abrir la siguiente
 this.dispose();    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new CrearCuentaFrame().setVisible(true);    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -203,6 +215,7 @@ this.dispose();    }//GEN-LAST:event_btnLoginActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jlabel1;
