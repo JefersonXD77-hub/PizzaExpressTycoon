@@ -7,6 +7,15 @@ package ui;
 
 import dto.UsuarioSesionDTO;
 
+import dao.ProductoDAO;
+import dto.RankingJugadorDTO;
+import java.math.BigDecimal;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import models.Producto;
+import service.JuegoService;
+
 /**
  *
  * @author aguil
@@ -14,6 +23,10 @@ import dto.UsuarioSesionDTO;
 public class AdminTiendaFrame extends javax.swing.JFrame {
 
     private final UsuarioSesionDTO sesion;
+    private final ProductoDAO productoDAO = new ProductoDAO();
+    private final JuegoService juegoService = new JuegoService();
+    private DefaultTableModel modeloTabla;
+    private Integer idProductoSeleccionado = null;
 
     public AdminTiendaFrame(UsuarioSesionDTO sesion) {
 
@@ -21,20 +34,117 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         setTitle("Admin Tienda - " + sesion.getNickname());
-        lblBienvenida.setText("Bienvenido: " + sesion.getNickname() + " (" + sesion.getNombreRol() + ")");
+        lblTitulo.setText("Bienvenido: " + sesion.getNickname() + " (" + sesion.getNombreRol() + ")");
+        inicializarVista();
     }
-    
+
+    private AdminTiendaFrame() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     /**
      * Creates new form AdminTiendaFrame
      */
-    public AdminTiendaFrame() {
-        this.sesion = null;
-        initComponents();
-        setLocationRelativeTo(null);
+    
 
+    
+    private void inicializarVista() {
+    configurarTabla();
+    cargarDatosAdmin();
+    limpiarFormulario();
+    cargarProductos();
+}
+
+private void configurarTabla() {
+    modeloTabla = new DefaultTableModel(
+            new Object[]{"ID", "Nombre", "Precio", "Activo"}, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
+    tblProductos.setModel(modeloTabla);
+}
+
+private void cargarDatosAdmin() {
+    lblTitulo.setText("Administración de Tienda - Productos");
+    lblAdmin.setText("Admin: " + sesion.getNickname());
+    lblSucursal.setText("Sucursal ID: " + sesion.getIdSucursal());
+    lblEstado.setText("Estado: listo");
+}
+
+private void cargarProductos() {
+    modeloTabla.setRowCount(0);
+
+    List<Producto> productos = productoDAO.listarTodosPorSucursal(sesion.getIdSucursal());
+
+    for (Producto p : productos) {
+        modeloTabla.addRow(new Object[]{
+            p.getIdProducto(),
+            p.getNombreProducto(),
+            p.getPrecio(),
+            p.isProductoActivo() ? "Sí" : "No"
+        });
+    }
+}
+
+private void limpiarFormulario() {
+    idProductoSeleccionado = null;
+    txtNombreProducto.setText("");
+    txtPrecioProducto.setText("");
+    chkProductoActivo.setSelected(true);
+}
+
+private Integer obtenerIdProductoSeleccionado() {
+    int fila = tblProductos.getSelectedRow();
+    if (fila == -1) {
+        return null;
     }
 
+    Object valor = tblProductos.getValueAt(fila, 0);
+    if (valor == null) {
+        return null;
+    }
+
+    return Integer.valueOf(valor.toString());
+}
+
+private Producto construirProductoDesdeFormulario(boolean incluirId) {
+    String nombre = txtNombreProducto.getText().trim();
+    String precioTexto = txtPrecioProducto.getText().trim();
+
+    if (nombre.isEmpty()) {
+        throw new RuntimeException("Ingresa el nombre del producto.");
+    }
+
+    if (precioTexto.isEmpty()) {
+        throw new RuntimeException("Ingresa el precio del producto.");
+    }
+
+    BigDecimal precio;
+    try {
+        precio = new BigDecimal(precioTexto);
+    } catch (Exception e) {
+        throw new RuntimeException("El precio no tiene un formato válido.");
+    }
+
+    Producto producto = new Producto();
+    producto.setIdSucursal(sesion.getIdSucursal());
+    producto.setNombreProducto(nombre);
+    producto.setPrecio(precio);
+    producto.setProductoActivo(chkProductoActivo.isSelected());
+
+    if (incluirId) {
+        if (idProductoSeleccionado == null) {
+            throw new RuntimeException("Selecciona un producto.");
+        }
+        producto.setIdProducto(idProductoSeleccionado);
+    }
+
+    return producto;
+}
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,31 +154,296 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblBienvenida = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        lblAdmin = new javax.swing.JLabel();
+        lblSucursal = new javax.swing.JLabel();
+        lblEstado = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblProductos = new javax.swing.JTable();
+        txtNombreProducto = new javax.swing.JTextField();
+        txtPrecioProducto = new javax.swing.JTextField();
+        chkProductoActivo = new javax.swing.JCheckBox();
+        btnNuevoProducto = new javax.swing.JButton();
+        btnGuardarProducto = new javax.swing.JButton();
+        btnCambiarEstadoProducto = new javax.swing.JButton();
+        btnRefrescarProductos = new javax.swing.JButton();
+        btnVerRankingSucursal = new javax.swing.JButton();
+        btnActualizarProducto = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblBienvenida.setText("Bienvenid@ ");
+        lblTitulo.setText("Bienvenid@ ");
+
+        lblAdmin.setText("Admin");
+
+        lblSucursal.setText("Sucursal");
+
+        lblEstado.setText("Estado");
+
+        tblProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tblProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblProductosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblProductos);
+
+        txtNombreProducto.setText("Nombre Producto");
+
+        txtPrecioProducto.setText("Precio Producto");
+
+        chkProductoActivo.setText("Producto Activo");
+
+        btnNuevoProducto.setText("Nuevo Producto");
+        btnNuevoProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoProductoActionPerformed(evt);
+            }
+        });
+
+        btnGuardarProducto.setText("Guardar Producto");
+        btnGuardarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarProductoActionPerformed(evt);
+            }
+        });
+
+        btnCambiarEstadoProducto.setText("Cambiar Estado Producto");
+        btnCambiarEstadoProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCambiarEstadoProductoActionPerformed(evt);
+            }
+        });
+
+        btnRefrescarProductos.setText("Refrescar Productos");
+        btnRefrescarProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefrescarProductosActionPerformed(evt);
+            }
+        });
+
+        btnVerRankingSucursal.setText("Ver Ranking Sucursal");
+        btnVerRankingSucursal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerRankingSucursalActionPerformed(evt);
+            }
+        });
+
+        btnActualizarProducto.setText("Actualizar Producto");
+        btnActualizarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarProductoActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Nombre del Producto:");
+
+        jLabel2.setText("Precio del Producto:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(185, Short.MAX_VALUE)
-                .addComponent(lblBienvenida)
-                .addGap(149, 149, 149))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblTitulo)
+                                .addGap(182, 182, 182))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblAdmin)
+                                    .addComponent(lblSucursal)
+                                    .addComponent(lblEstado))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(112, 112, 112)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnVerRankingSucursal)
+                            .addComponent(btnCambiarEstadoProducto)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(btnRefrescarProductos)
+                                .addComponent(btnActualizarProducto))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addComponent(btnNuevoProducto)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtPrecioProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(chkProductoActivo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnGuardarProducto)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGap(35, 35, 35))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(lblBienvenida)
-                .addContainerGap(254, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addComponent(lblTitulo)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblAdmin)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblSucursal)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblEstado))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnActualizarProducto)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnRefrescarProductos)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnVerRankingSucursal)))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCambiarEstadoProducto)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPrecioProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chkProductoActivo)
+                            .addComponent(btnNuevoProducto)
+                            .addComponent(btnGuardarProducto))
+                        .addGap(51, 51, 51))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tblProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductosMouseClicked
+
+int fila = tblProductos.getSelectedRow();
+    if (fila == -1) {
+        return;
+    }
+
+    idProductoSeleccionado = Integer.valueOf(tblProductos.getValueAt(fila, 0).toString());
+    txtNombreProducto.setText(tblProductos.getValueAt(fila, 1).toString());
+    txtPrecioProducto.setText(tblProductos.getValueAt(fila, 2).toString());
+    chkProductoActivo.setSelected("Sí".equals(tblProductos.getValueAt(fila, 3).toString()));
+
+    
+    }//GEN-LAST:event_tblProductosMouseClicked
+
+    private void btnNuevoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProductoActionPerformed
+       
+limpiarFormulario();
+    lblEstado.setText("Estado: formulario listo para nuevo producto");
+    }//GEN-LAST:event_btnNuevoProductoActionPerformed
+
+    private void btnGuardarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarProductoActionPerformed
+
+         try {
+        Producto producto = construirProductoDesdeFormulario(false);
+        int idGenerado = productoDAO.insertarProducto(producto);
+
+        cargarProductos();
+        limpiarFormulario();
+        lblEstado.setText("Estado: producto creado con ID " + idGenerado);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+
+    }//GEN-LAST:event_btnGuardarProductoActionPerformed
+
+    private void btnCambiarEstadoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarEstadoProductoActionPerformed
+
+ try {
+        if (idProductoSeleccionado == null) {
+            throw new RuntimeException("Selecciona un producto.");
+        }
+
+        boolean nuevoEstado = chkProductoActivo.isSelected();
+        boolean ok = productoDAO.cambiarEstadoProducto(
+                idProductoSeleccionado,
+                sesion.getIdSucursal(),
+                nuevoEstado
+        );
+
+        if (!ok) {
+            throw new RuntimeException("No se pudo cambiar el estado del producto.");
+        }
+
+        cargarProductos();
+        lblEstado.setText("Estado: producto actualizado a " + (nuevoEstado ? "activo" : "inactivo"));
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+
+    }//GEN-LAST:event_btnCambiarEstadoProductoActionPerformed
+
+    private void btnRefrescarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarProductosActionPerformed
+
+cargarProductos();
+    lblEstado.setText("Estado: productos recargados");
+
+    }//GEN-LAST:event_btnRefrescarProductosActionPerformed
+
+    private void btnVerRankingSucursalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerRankingSucursalActionPerformed
+try {
+        List<RankingJugadorDTO> ranking = juegoService.obtenerRankingPorSucursal(sesion.getIdSucursal(), 10);
+        RankingFrame frame = new RankingFrame("Ranking de Sucursal", ranking);
+        frame.setVisible(true);
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error al cargar ranking de sucursal: " + e.getMessage());
+    }
+
+    }//GEN-LAST:event_btnVerRankingSucursalActionPerformed
+
+    private void btnActualizarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarProductoActionPerformed
+try {
+        Producto producto = construirProductoDesdeFormulario(true);
+        boolean ok = productoDAO.actualizarProducto(producto);
+
+        if (!ok) {
+            throw new RuntimeException("No se pudo actualizar el producto.");
+        }
+
+        cargarProductos();
+        lblEstado.setText("Estado: producto actualizado");
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+    }//GEN-LAST:event_btnActualizarProductoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -106,6 +481,22 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel lblBienvenida;
+    private javax.swing.JButton btnActualizarProducto;
+    private javax.swing.JButton btnCambiarEstadoProducto;
+    private javax.swing.JButton btnGuardarProducto;
+    private javax.swing.JButton btnNuevoProducto;
+    private javax.swing.JButton btnRefrescarProductos;
+    private javax.swing.JButton btnVerRankingSucursal;
+    private javax.swing.JCheckBox chkProductoActivo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblAdmin;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblSucursal;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTable tblProductos;
+    private javax.swing.JTextField txtNombreProducto;
+    private javax.swing.JTextField txtPrecioProducto;
     // End of variables declaration//GEN-END:variables
 }

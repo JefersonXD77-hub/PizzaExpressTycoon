@@ -28,6 +28,26 @@
               <Component id="lblBienvenida" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="173" max="-2" attributes="0"/>
           </Group>
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblSucursal" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblJugador" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblEstado" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="btnIniciarPartida" max="32767" attributes="0"/>
+                          <Component id="btnVerRanking" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -35,7 +55,17 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
               <Component id="lblBienvenida" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="246" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <Component id="lblJugador" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblSucursal" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblEstado" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnIniciarPartida" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnVerRanking" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="64" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -45,6 +75,37 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Bienvenid@ "/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnIniciarPartida">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Iniciar Partida"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnIniciarPartidaActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblJugador">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Jugador"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblSucursal">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Sucursal"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblEstado">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Estado: Listo"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnVerRanking">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ver Ranking"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVerRankingActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

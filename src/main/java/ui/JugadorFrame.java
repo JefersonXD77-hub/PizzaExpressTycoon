@@ -6,6 +6,12 @@
 package ui;
 
 import dto.UsuarioSesionDTO;
+import dao.PartidaDAO;
+import javax.swing.JOptionPane;
+import ui.JuegoFrame;
+import java.util.List;
+import dto.RankingJugadorDTO;
+import service.JuegoService;
 
 /**
  *
@@ -14,6 +20,8 @@ import dto.UsuarioSesionDTO;
 public class JugadorFrame extends javax.swing.JFrame {
 
     private final UsuarioSesionDTO sesion;
+    private final PartidaDAO partidaDAO = new PartidaDAO();
+    private final JuegoService juegoService = new JuegoService();
 
     public JugadorFrame(UsuarioSesionDTO sesion) {
         this.sesion = sesion;
@@ -21,6 +29,7 @@ public class JugadorFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setTitle("Jugador - " + sesion.getNickname());
         lblBienvenida.setText("Bienvenido: " + sesion.getNickname() + " (" + sesion.getNombreRol() + ")");
+        cargarDatosSesion();
     }
 
     /**
@@ -30,6 +39,41 @@ public class JugadorFrame extends javax.swing.JFrame {
         this.sesion = null;
         initComponents();
         setLocationRelativeTo(null);
+        cargarDatosSesion();
+    }
+
+    private void cargarDatosSesion() {
+        if (sesion == null) {
+            lblBienvenida.setText("Bienvenid@");
+            if (lblJugador != null) {
+                lblJugador.setText("Jugador: -");
+            }
+            if (lblSucursal != null) {
+                lblSucursal.setText("Sucursal: -");
+            }
+            if (lblEstado != null) {
+                lblEstado.setText("Estado: sin sesión");
+            }
+            return;
+        }
+
+        lblBienvenida.setText("Bienvenido: " + sesion.getNickname() + " (" + sesion.getNombreRol() + ")");
+
+        if (lblJugador != null) {
+            lblJugador.setText("Jugador: " + sesion.getNickname());
+        }
+
+        if (lblSucursal != null) {
+            if (sesion.getIdSucursal() != null) {
+                lblSucursal.setText("Sucursal ID: " + sesion.getIdSucursal());
+            } else {
+                lblSucursal.setText("Sucursal: no asignada");
+            }
+        }
+
+        if (lblEstado != null) {
+            lblEstado.setText("Estado: listo para iniciar partida");
+        }
     }
 
     /**
@@ -42,10 +86,35 @@ public class JugadorFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         lblBienvenida = new javax.swing.JLabel();
+        btnIniciarPartida = new javax.swing.JButton();
+        lblJugador = new javax.swing.JLabel();
+        lblSucursal = new javax.swing.JLabel();
+        lblEstado = new javax.swing.JLabel();
+        btnVerRanking = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblBienvenida.setText("Bienvenid@ ");
+
+        btnIniciarPartida.setText("Iniciar Partida");
+        btnIniciarPartida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarPartidaActionPerformed(evt);
+            }
+        });
+
+        lblJugador.setText("Jugador");
+
+        lblSucursal.setText("Sucursal");
+
+        lblEstado.setText("Estado: Listo");
+
+        btnVerRanking.setText("Ver Ranking");
+        btnVerRanking.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerRankingActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -55,17 +124,81 @@ public class JugadorFrame extends javax.swing.JFrame {
                 .addContainerGap(161, Short.MAX_VALUE)
                 .addComponent(lblBienvenida)
                 .addGap(173, 173, 173))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblSucursal)
+                            .addComponent(lblJugador)
+                            .addComponent(lblEstado)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnIniciarPartida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnVerRanking, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(lblBienvenida)
-                .addContainerGap(246, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(lblJugador)
+                .addGap(18, 18, 18)
+                .addComponent(lblSucursal)
+                .addGap(18, 18, 18)
+                .addComponent(lblEstado)
+                .addGap(18, 18, 18)
+                .addComponent(btnIniciarPartida)
+                .addGap(18, 18, 18)
+                .addComponent(btnVerRanking)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnIniciarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarPartidaActionPerformed
+        if (sesion == null) {
+            JOptionPane.showMessageDialog(this, "No existe sesión activa.");
+            return;
+        }
+
+        if (sesion.getIdSucursal() == null) {
+            JOptionPane.showMessageDialog(this, "El jugador no tiene sucursal asignada.");
+            return;
+        }
+
+        try {
+            int idPartida = partidaDAO.crearPartida(sesion.getIdUsuario(), sesion.getIdSucursal());
+
+            if (lblEstado != null) {
+                lblEstado.setText("Estado: partida creada con ID " + idPartida);
+            }
+
+            JuegoFrame juegoFrame = new JuegoFrame(sesion, idPartida);
+            juegoFrame.setVisible(true);
+            this.dispose();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al iniciar partida: " + e.getMessage());
+        }
+     }//GEN-LAST:event_btnIniciarPartidaActionPerformed
+
+    private void btnVerRankingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerRankingActionPerformed
+        try {
+            List<RankingJugadorDTO> ranking = juegoService.obtenerRankingGeneral(10);
+            RankingFrame frame = new RankingFrame("Ranking General", ranking);
+            frame.setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar ranking: " + e.getMessage());
+        }
+
+    }//GEN-LAST:event_btnVerRankingActionPerformed
 
     /**
      * @param args the command line arguments
@@ -103,6 +236,11 @@ public class JugadorFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnIniciarPartida;
+    private javax.swing.JButton btnVerRanking;
     private javax.swing.JLabel lblBienvenida;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblJugador;
+    private javax.swing.JLabel lblSucursal;
     // End of variables declaration//GEN-END:variables
 }
