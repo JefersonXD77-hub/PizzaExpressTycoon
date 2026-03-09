@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="270" max="-2" attributes="0"/>
+                      <Component id="lblTitulo" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblEstado" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTotalPartidas" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblMejorPuntajeGlobal" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPromedioPuntajeGlobal" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTotalEntregados" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTotalCancelados" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTotalNoEntregados" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTotalJugadores" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTotalAdminsTienda" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTotalSucursales" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="lblAdmin" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="493" max="32767" attributes="0"/>
+                              <Component id="btnRefrescarEstadisticasGlobales" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace min="-2" pref="152" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+              <Component id="lblTitulo" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblAdmin" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnRefrescarEstadisticasGlobales" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblEstado" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblTotalPartidas" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblMejorPuntajeGlobal" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblPromedioPuntajeGlobal" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblTotalEntregados" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblTotalCancelados" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblTotalNoEntregados" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblTotalJugadores" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblTotalAdminsTienda" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="lblTotalSucursales" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="55" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="lblTitulo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Titulo"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblAdmin">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Admin"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblEstado">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Estado"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalPartidas">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total Partidas"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblMejorPuntajeGlobal">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Mejor Puntaje Global"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPromedioPuntajeGlobal">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Promedio Puntaje Global"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalEntregados">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total Entregados"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalCancelados">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total Cancelados"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalNoEntregados">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total No Entregados"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalJugadores">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total Jugadores"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalAdminsTienda">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total Admins Tienda"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalSucursales">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total Sucursales"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnRefrescarEstadisticasGlobales">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Refrescar "/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRefrescarEstadisticasGlobalesActionPerformed"/>
+      </Events>
+    </Component>
+  </SubComponents>
+</Form>

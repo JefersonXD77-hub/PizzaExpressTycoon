@@ -6,6 +6,16 @@
 package ui;
 
 import dto.UsuarioSesionDTO;
+import dao.SucursalDAO;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import models.Sucursal;
+import ui.GestionUsuariosFrame;
+import ui.GestionParametrosFrame;
+import ui.RankingFrame;
+import dao.RankingDAO;
+import dto.RankingJugadorDTO;
 
 /**
  *
@@ -14,23 +24,93 @@ import dto.UsuarioSesionDTO;
 public class SuperAdminFrame extends javax.swing.JFrame {
 
     private final UsuarioSesionDTO sesion;
+    private final SucursalDAO sucursalDAO = new SucursalDAO();
+    private DefaultTableModel modeloTabla;
+    private Integer idSucursalSeleccionada = null;
+    private final RankingDAO rankingDAO = new RankingDAO();
 
     /**
      * Creates new form SuperAdminFrame
      */
-
     public SuperAdminFrame(UsuarioSesionDTO sesion) {
         this.sesion = sesion;
         initComponents();
-        setLocationRelativeTo(null); 
+        setLocationRelativeTo(null);
         setTitle("Super Admin - " + sesion.getNickname());
         lblBienvenida.setText("Bienvenido: " + sesion.getNickname() + " (" + sesion.getNombreRol() + ")");
+        inicializarVista();
     }
 
     public SuperAdminFrame() {
         this.sesion = null;
         initComponents();
         setLocationRelativeTo(null);
+    }
+
+    private void inicializarVista() {
+        configurarTabla();
+        cargarDatosAdmin();
+        limpiarFormulario();
+        cargarSucursales();
+    }
+
+    private void configurarTabla() {
+        modeloTabla = new DefaultTableModel(
+                new Object[]{"ID", "Nombre", "Activa"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        tblSucursal.setModel(modeloTabla);
+    }
+
+    private void cargarDatosAdmin() {
+        lblTitulo.setText("Super Admin - Gestión de Sucursales");
+        lblAdmin.setText("Usuario: " + sesion.getNickname());
+        lblEstado.setText("Estado: listo");
+    }
+
+    private void cargarSucursales() {
+        modeloTabla.setRowCount(0);
+
+        List<Sucursal> sucursales = sucursalDAO.listarTodas();
+
+        for (Sucursal s : sucursales) {
+            modeloTabla.addRow(new Object[]{
+                s.getIdSucursal(),
+                s.getNombreSucursal(),
+                s.isSucursalActiva() ? "Sí" : "No"
+            });
+        }
+    }
+
+    private void limpiarFormulario() {
+        idSucursalSeleccionada = null;
+        txtNombreSucursal.setText("");
+        chkSucursalActiva.setSelected(true);
+    }
+
+    private Sucursal construirSucursalDesdeFormulario(boolean incluirId) {
+        String nombre = txtNombreSucursal.getText().trim();
+
+        if (nombre.isEmpty()) {
+            throw new RuntimeException("Ingresa el nombre de la sucursal.");
+        }
+
+        Sucursal sucursal = new Sucursal();
+        sucursal.setNombreSucursal(nombre);
+        sucursal.setSucursalActiva(chkSucursalActiva.isSelected());
+
+        if (incluirId) {
+            if (idSucursalSeleccionada == null) {
+                throw new RuntimeException("Selecciona una sucursal.");
+            }
+            sucursal.setIdSucursal(idSucursalSeleccionada);
+        }
+
+        return sucursal;
     }
 
     /**
@@ -43,30 +123,305 @@ public class SuperAdminFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         lblBienvenida = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        lblAdmin = new javax.swing.JLabel();
+        lblEstado = new javax.swing.JLabel();
+        txtNombreSucursal = new javax.swing.JTextField();
+        chkSucursalActiva = new javax.swing.JCheckBox();
+        btnNuevaSucursal = new javax.swing.JButton();
+        btnGuardarSucursal = new javax.swing.JButton();
+        btnActualizarSucursal = new javax.swing.JButton();
+        btnCambiarEstadoSucursal = new javax.swing.JButton();
+        btnRefrescarSucursales = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblSucursal = new javax.swing.JTable();
+        btnGestionUsuarios = new javax.swing.JButton();
+        btnGestionParametros = new javax.swing.JButton();
+        btnRankingGeneral = new javax.swing.JButton();
+        btnEstadisticasGlobales = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblBienvenida.setText("Bienvenid@  ");
+
+        lblTitulo.setText("Titulo");
+
+        lblAdmin.setText("Admin");
+
+        lblEstado.setText("Estado");
+
+        txtNombreSucursal.setText("Nombre Sucursal");
+
+        chkSucursalActiva.setText("Sucursal Activa");
+
+        btnNuevaSucursal.setText("Limpiar/Nueva");
+        btnNuevaSucursal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaSucursalActionPerformed(evt);
+            }
+        });
+
+        btnGuardarSucursal.setText("Guardar Sucursal");
+        btnGuardarSucursal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarSucursalActionPerformed(evt);
+            }
+        });
+
+        btnActualizarSucursal.setText("Actualizar Sucursal");
+        btnActualizarSucursal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarSucursalActionPerformed(evt);
+            }
+        });
+
+        btnCambiarEstadoSucursal.setText("Cambiar Estado Sucursal");
+        btnCambiarEstadoSucursal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCambiarEstadoSucursalActionPerformed(evt);
+            }
+        });
+
+        btnRefrescarSucursales.setText("Refrescar Sucursales");
+        btnRefrescarSucursales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefrescarSucursalesActionPerformed(evt);
+            }
+        });
+
+        tblSucursal.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tblSucursal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSucursalMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblSucursal);
+
+        btnGestionUsuarios.setText("Gestión de Usuarios");
+        btnGestionUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionUsuariosActionPerformed(evt);
+            }
+        });
+
+        btnGestionParametros.setText("Parámetros del Juego");
+        btnGestionParametros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionParametrosActionPerformed(evt);
+            }
+        });
+
+        btnRankingGeneral.setText("Ranking General");
+        btnRankingGeneral.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRankingGeneralActionPerformed(evt);
+            }
+        });
+
+        btnEstadisticasGlobales.setText("Estadísticas Globales");
+        btnEstadisticasGlobales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEstadisticasGlobalesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(283, 283, 283)
+                .addGap(252, 252, 252)
                 .addComponent(lblBienvenida)
-                .addContainerGap(448, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblEstado)
+                    .addComponent(lblAdmin)
+                    .addComponent(lblTitulo)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtNombreSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnEstadisticasGlobales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chkSucursalActiva, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnCambiarEstadoSucursal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnRefrescarSucursales, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnActualizarSucursal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnGuardarSucursal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnNuevaSucursal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnGestionUsuarios, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnGestionParametros, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnRankingGeneral, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(168, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
+                .addGap(25, 25, 25)
                 .addComponent(lblBienvenida)
-                .addContainerGap(379, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTitulo)
+                    .addComponent(txtNombreSucursal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblAdmin)
+                    .addComponent(chkSucursalActiva))
+                .addGap(18, 18, 18)
+                .addComponent(lblEstado)
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnNuevaSucursal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnGuardarSucursal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnActualizarSucursal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnRefrescarSucursales)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCambiarEstadoSucursal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnGestionUsuarios)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnGestionParametros)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnRankingGeneral)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnEstadisticasGlobales))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnNuevaSucursalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaSucursalActionPerformed
+
+        limpiarFormulario();
+        lblEstado.setText("Estado: formulario listo para nueva sucursal");
+
+    }//GEN-LAST:event_btnNuevaSucursalActionPerformed
+
+    private void btnGuardarSucursalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarSucursalActionPerformed
+
+        try {
+            Sucursal sucursal = construirSucursalDesdeFormulario(false);
+            int idGenerado = sucursalDAO.insertarSucursal(sucursal);
+
+            cargarSucursales();
+            limpiarFormulario();
+            lblEstado.setText("Estado: sucursal creada con ID " + idGenerado);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnGuardarSucursalActionPerformed
+
+    private void btnActualizarSucursalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarSucursalActionPerformed
+        try {
+            Sucursal sucursal = construirSucursalDesdeFormulario(true);
+            boolean ok = sucursalDAO.actualizarSucursal(sucursal);
+
+            if (!ok) {
+                throw new RuntimeException("No se pudo actualizar la sucursal.");
+            }
+
+            cargarSucursales();
+            lblEstado.setText("Estado: sucursal actualizada");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+
+    }//GEN-LAST:event_btnActualizarSucursalActionPerformed
+
+    private void btnCambiarEstadoSucursalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarEstadoSucursalActionPerformed
+
+        try {
+            if (idSucursalSeleccionada == null) {
+                throw new RuntimeException("Selecciona una sucursal.");
+            }
+
+            boolean nuevoEstado = chkSucursalActiva.isSelected();
+            boolean ok = sucursalDAO.cambiarEstadoSucursal(idSucursalSeleccionada, nuevoEstado);
+
+            if (!ok) {
+                throw new RuntimeException("No se pudo cambiar el estado de la sucursal.");
+            }
+
+            cargarSucursales();
+            lblEstado.setText("Estado: sucursal actualizada a " + (nuevoEstado ? "activa" : "inactiva"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+
+    }//GEN-LAST:event_btnCambiarEstadoSucursalActionPerformed
+
+    private void btnRefrescarSucursalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefrescarSucursalesActionPerformed
+        cargarSucursales();
+        lblEstado.setText("Estado: sucursales recargadas");
+    }//GEN-LAST:event_btnRefrescarSucursalesActionPerformed
+
+    private void tblSucursalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSucursalMouseClicked
+
+        int fila = tblSucursal.getSelectedRow();
+        if (fila == -1) {
+            return;
+        }
+
+        idSucursalSeleccionada = Integer.valueOf(tblSucursal.getValueAt(fila, 0).toString());
+        txtNombreSucursal.setText(tblSucursal.getValueAt(fila, 1).toString());
+        chkSucursalActiva.setSelected("Sí".equals(tblSucursal.getValueAt(fila, 2).toString()));
+
+
+    }//GEN-LAST:event_tblSucursalMouseClicked
+
+    private void btnGestionUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionUsuariosActionPerformed
+
+        new GestionUsuariosFrame(sesion).setVisible(true);
+
+    }//GEN-LAST:event_btnGestionUsuariosActionPerformed
+
+    private void btnGestionParametrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionParametrosActionPerformed
+        new GestionParametrosFrame(sesion).setVisible(true);
+
+    }//GEN-LAST:event_btnGestionParametrosActionPerformed
+
+    private void btnRankingGeneralActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRankingGeneralActionPerformed
+        try {
+            List<RankingJugadorDTO> ranking = rankingDAO.obtenerRankingGeneral(50);
+            new RankingFrame("Ranking General", ranking).setVisible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error cargando ranking general: " + e.getMessage());
+        }
+
+    }//GEN-LAST:event_btnRankingGeneralActionPerformed
+
+    private void btnEstadisticasGlobalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEstadisticasGlobalesActionPerformed
+        new EstadisticasGlobalesFrame(sesion).setVisible(true);
+
+    }//GEN-LAST:event_btnEstadisticasGlobalesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -104,6 +459,22 @@ public class SuperAdminFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizarSucursal;
+    private javax.swing.JButton btnCambiarEstadoSucursal;
+    private javax.swing.JButton btnEstadisticasGlobales;
+    private javax.swing.JButton btnGestionParametros;
+    private javax.swing.JButton btnGestionUsuarios;
+    private javax.swing.JButton btnGuardarSucursal;
+    private javax.swing.JButton btnNuevaSucursal;
+    private javax.swing.JButton btnRankingGeneral;
+    private javax.swing.JButton btnRefrescarSucursales;
+    private javax.swing.JCheckBox chkSucursalActiva;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblAdmin;
     private javax.swing.JLabel lblBienvenida;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTable tblSucursal;
+    private javax.swing.JTextField txtNombreSucursal;
     // End of variables declaration//GEN-END:variables
 }

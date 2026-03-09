@@ -23,60 +23,76 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <Group type="103" groupAlignment="1" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="lblTitulo" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lblAdmin" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblSucursal" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblEstado" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace pref="85" max="32767" attributes="0"/>
-                              <Component id="jScrollPane1" min="-2" pref="340" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="112" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="btnVerRankingSucursal" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnCambiarEstadoProducto" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                              <Component id="btnRefrescarProductos" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnActualizarProducto" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
-                      <Component id="btnNuevoProducto" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="txtNombreProducto" min="-2" pref="125" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="txtPrecioProducto" min="-2" pref="125" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="chkProductoActivo" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="btnNuevoProducto" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnGuardarProducto" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="txtNombreProducto" min="-2" pref="125" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="txtPrecioProducto" min="-2" pref="125" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="chkProductoActivo" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btnGuardarProducto" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="308" max="-2" attributes="0"/>
+                              <Component id="lblTitulo" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="jScrollPane1" min="-2" pref="499" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblEstado" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblTotalPartidas" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblMejorPuntaje" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblSucursal" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblAdmin" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="55" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblPromedioPuntaje" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblTotalEntregados" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblTotalNoEntregados" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblTotalCancelados" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="158" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="btnCambiarEstadoProducto" max="32767" attributes="0"/>
+                          <Component id="btnVerRankingSucursal" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnRefrescarProductos" alignment="1" min="-2" pref="165" max="-2" attributes="0"/>
+                          <Component id="btnActualizarProducto" alignment="1" min="-2" pref="164" max="-2" attributes="0"/>
+                          <Component id="btnExportarCSV" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnCargarEstadisticas" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -87,45 +103,51 @@
               <Component id="lblTitulo" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="lblAdmin" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="lblSucursal" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="lblEstado" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="btnActualizarProducto" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="btnRefrescarProductos" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="btnVerRankingSucursal" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
+                  <Component id="jScrollPane1" alignment="0" min="-2" pref="175" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="btnActualizarProducto" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="btnRefrescarProductos" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="btnVerRankingSucursal" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="btnCambiarEstadoProducto" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Component id="jScrollPane1" min="-2" pref="175" max="-2" attributes="0"/>
-                      <EmptySpace pref="64" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txtNombreProducto" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtPrecioProducto" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="chkProductoActivo" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnNuevoProducto" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnGuardarProducto" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace pref="12" max="32767" attributes="0"/>
+              <Component id="lblAdmin" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="lblSucursal" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="lblEstado" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnNuevoProducto" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtNombreProducto" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtPrecioProducto" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="chkProductoActivo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnGuardarProducto" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblTotalPartidas" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblPromedioPuntaje" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTotalCancelados" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnCargarEstadisticas" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblMejorPuntaje" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTotalEntregados" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblTotalNoEntregados" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnExportarCSV" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -244,6 +266,52 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Precio del Producto:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalPartidas">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total Partidas: "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblMejorPuntaje">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Mejor Puntaje: "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPromedioPuntaje">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Promedio Puntaje: "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalEntregados">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total Entregados: "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalCancelados">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total Cancelados: "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTotalNoEntregados">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total No Entregados: "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnCargarEstadisticas">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cargar Estadisticas"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCargarEstadisticasActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnExportarCSV">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Exportar CSV"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExportarCSVActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
