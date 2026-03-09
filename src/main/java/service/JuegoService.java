@@ -33,9 +33,9 @@ public class JuegoService {
 
     private final Random random;
 
-    private static final int MAX_PEDIDOS_ACTIVOS = 5;
-    private static final int INTERVALO_GENERACION_SEGUNDOS = 15;
-    private static final int DURACION_PARTIDA_SEGUNDOS = 180;
+    private static final int MAX_PEDIDOS_ACTIVOS = 10;
+    private static final int INTERVALO_GENERACION_SEGUNDOS = 4;
+    private static final int DURACION_PARTIDA_SEGUNDOS = 120;
     private static final int MAX_PRODUCTOS_POR_PEDIDO = 3;
 
     public JuegoService() {
@@ -333,10 +333,11 @@ public class JuegoService {
     private int calcularPuntajeEntrega(Pedido pedido) {
         int puntos = 100;
 
-        if (pedido.getFechaDePedido() != null) {
-            long segundosTranscurridos = Duration.between(pedido.getFechaDePedido(), LocalDateTime.now()).getSeconds();
+        if (pedido != null && pedido.getTiempoDeExpiracion() != null && pedido.getTiempoLimite() > 0) {
+            long segundosRestantes = Duration.between(LocalDateTime.now(), pedido.getTiempoDeExpiracion()).getSeconds();
+            segundosRestantes = Math.max(segundosRestantes, 0);
 
-            if (segundosTranscurridos <= (pedido.getTiempoLimite() / 2)) {
+            if (segundosRestantes > (pedido.getTiempoLimite() / 2)) {
                 puntos += 50;
             }
         }
@@ -347,9 +348,13 @@ public class JuegoService {
     public NivelResultado recalcularNivel(int puntajeActual, int pedidosEntregados, int nivelMaximoActual) {
         int nivelNuevo = 1;
 
-        if (puntajeActual >= 1000 || pedidosEntregados >= 10) {
+        if (puntajeActual >= 1400 || pedidosEntregados >= 12) {
+            nivelNuevo = 5;
+        } else if (puntajeActual >= 1000 || pedidosEntregados >= 8) {
+            nivelNuevo = 4;
+        } else if (puntajeActual >= 600 || pedidosEntregados >= 5) {
             nivelNuevo = 3;
-        } else if (puntajeActual >= 500 || pedidosEntregados >= 5) {
+        } else if (puntajeActual >= 250 || pedidosEntregados >= 2) {
             nivelNuevo = 2;
         }
 

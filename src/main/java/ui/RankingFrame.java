@@ -24,6 +24,7 @@ public class RankingFrame extends javax.swing.JFrame {
    public RankingFrame() {
         initComponents();
         setLocationRelativeTo(null);
+        getContentPane().setBackground(new java.awt.Color(220, 230, 240));
         configurarTabla();
     }
 
@@ -77,7 +78,7 @@ public class RankingFrame extends javax.swing.JFrame {
         jScrollPane = new javax.swing.JScrollPane();
         tblRanking = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitulo.setText("Titulo");
 

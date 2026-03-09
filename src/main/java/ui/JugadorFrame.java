@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 import ui.JuegoFrame;
 import java.util.List;
 import dto.RankingJugadorDTO;
+import models.Sucursal;
+import dao.SucursalDAO;
 import service.JuegoService;
 
 /**
@@ -22,11 +24,13 @@ public class JugadorFrame extends javax.swing.JFrame {
     private final UsuarioSesionDTO sesion;
     private final PartidaDAO partidaDAO = new PartidaDAO();
     private final JuegoService juegoService = new JuegoService();
+    private final SucursalDAO sucursalDAO = new SucursalDAO();
 
     public JugadorFrame(UsuarioSesionDTO sesion) {
         this.sesion = sesion;
         initComponents();
         setLocationRelativeTo(null);
+        getContentPane().setBackground(new java.awt.Color(220, 230, 240));
         setTitle("Jugador - " + sesion.getNickname());
         lblBienvenida.setText("Bienvenido: " + sesion.getNickname() + " (" + sesion.getNombreRol() + ")");
         cargarDatosSesion();
@@ -65,7 +69,13 @@ public class JugadorFrame extends javax.swing.JFrame {
 
         if (lblSucursal != null) {
             if (sesion.getIdSucursal() != null) {
-                lblSucursal.setText("Sucursal ID: " + sesion.getIdSucursal());
+                Sucursal sucursal = sucursalDAO.buscarPorId(sesion.getIdSucursal());
+
+                if (sucursal != null) {
+                    lblSucursal.setText("Sucursal: " + sucursal.getNombreSucursal());
+                } else {
+                    lblSucursal.setText("Sucursal ID: " + sesion.getIdSucursal());
+                }
             } else {
                 lblSucursal.setText("Sucursal: no asignada");
             }
@@ -91,8 +101,9 @@ public class JugadorFrame extends javax.swing.JFrame {
         lblSucursal = new javax.swing.JLabel();
         lblEstado = new javax.swing.JLabel();
         btnVerRanking = new javax.swing.JButton();
+        btnCerrarSesion = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblBienvenida.setText("Bienvenid@ ");
 
@@ -116,45 +127,61 @@ public class JugadorFrame extends javax.swing.JFrame {
             }
         });
 
+        btnCerrarSesion.setText("Cerrar Sesion");
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(161, Short.MAX_VALUE)
-                .addComponent(lblBienvenida)
-                .addGap(173, 173, 173))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion)
+                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
+                .addGap(128, 128, 128)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnVerRanking, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnIniciarPartida, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
+                .addGap(0, 132, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(55, 55, 55)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
+                        .addComponent(lblJugador)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblSucursal)
-                            .addComponent(lblJugador)
-                            .addComponent(lblEstado)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnIniciarPartida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnVerRanking, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(lblEstado))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(97, 97, 97)
+                .addComponent(lblBienvenida)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(10, 10, 10)
+                .addComponent(btnCerrarSesion)
+                .addGap(13, 13, 13)
                 .addComponent(lblBienvenida)
-                .addGap(18, 18, 18)
+                .addGap(27, 27, 27)
                 .addComponent(lblJugador)
                 .addGap(18, 18, 18)
                 .addComponent(lblSucursal)
                 .addGap(18, 18, 18)
                 .addComponent(lblEstado)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addComponent(btnIniciarPartida)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnVerRanking)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addGap(37, 37, 37))
         );
 
         pack();
@@ -200,6 +227,11 @@ public class JugadorFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnVerRankingActionPerformed
 
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+        new LoginFrame().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -236,6 +268,7 @@ public class JugadorFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnIniciarPartida;
     private javax.swing.JButton btnVerRanking;
     private javax.swing.JLabel lblBienvenida;

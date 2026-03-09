@@ -14,6 +14,10 @@ import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import models.Pedido;
 import service.JuegoService;
+import java.awt.Color;
+import java.awt.Component;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
@@ -39,12 +43,17 @@ public class JuegoFrame extends javax.swing.JFrame {
     private boolean partidaTerminada = false;
     private Integer idPedidoSeleccionado = null;
 
+    private static final int SEGUNDOS_CIERRE_RECEPCION = 10;
+
+    private List<Pedido> pedidosActuales;
+
     /**
      * Creates new form JuegoFrame
      */
     public JuegoFrame() {
         initComponents();
         setLocationRelativeTo(null);
+        getContentPane().setBackground(new java.awt.Color(220, 230, 240));
     }
 
     public JuegoFrame(UsuarioSesionDTO sesion, int idPartida) {
@@ -77,6 +86,42 @@ public class JuegoFrame extends javax.swing.JFrame {
         };
 
         tblPedidos.setModel(modeloTabla);
+
+        tblPedidos.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+                Component c = super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+
+                if (isSelected) {
+                    return c;
+                }
+
+                c.setBackground(Color.WHITE);
+
+                if (pedidosActuales != null && row >= 0 && row < pedidosActuales.size()) {
+                    Pedido pedido = pedidosActuales.get(row);
+                    long restantes = juegoService.calcularSegundosRestantes(pedido);
+                    int tiempoLimite = pedido.getTiempoLimite();
+
+                    if (tiempoLimite > 0) {
+                        double porcentaje = (double) restantes / (double) tiempoLimite;
+
+                        if (porcentaje <= 0.20) {
+                            c.setBackground(new Color(255, 153, 153)); // rojo suave
+                        } else if (porcentaje <= 0.50) {
+                            c.setBackground(new Color(255, 255, 153)); // amarillo suave
+                        } else {
+                            c.setBackground(new Color(153, 255, 153)); // verde suave
+                        }
+                    }
+                }
+
+                return c;
+            }
+        });
     }
 
     private void configurarVistaInicial() {
@@ -140,24 +185,31 @@ public class JuegoFrame extends javax.swing.JFrame {
             return;
         }
 
-        segundosParaSiguienteGeneracion--;
-        if (segundosParaSiguienteGeneracion <= 0) {
-            try {
-                JuegoService.ResultadoPedido resultado = juegoService.generarPedidoAleatorio(
-                        idPartida,
-                        sesion.getIdSucursal(),
-                        nivelActual,
-                        sesion.getIdUsuario()
-                );
+        boolean recepcionAbierta = segundosRestantesPartida > SEGUNDOS_CIERRE_RECEPCION;
 
-                lblEstado.setText("Estado: " + resultado.getMensaje());
+        if (recepcionAbierta) {
+            segundosParaSiguienteGeneracion--;
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                lblEstado.setText("Estado: error al generar pedido");
+            if (segundosParaSiguienteGeneracion <= 0) {
+                try {
+                    JuegoService.ResultadoPedido resultado = juegoService.generarPedidoAleatorio(
+                            idPartida,
+                            sesion.getIdSucursal(),
+                            nivelActual,
+                            sesion.getIdUsuario()
+                    );
+
+                    lblEstado.setText("Estado: " + resultado.getMensaje());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    lblEstado.setText("Estado: error al generar pedido");
+                }
+
+                segundosParaSiguienteGeneracion = juegoService.getIntervaloGeneracionSegundos();
             }
-
-            segundosParaSiguienteGeneracion = juegoService.getIntervaloGeneracionSegundos();
+        } else {
+            lblEstado.setText("Estado: recepción cerrada");
         }
 
         actualizarNivel();
@@ -236,9 +288,9 @@ public class JuegoFrame extends javax.swing.JFrame {
 
         modeloTabla.setRowCount(0);
 
-        List<Pedido> pedidos = juegoService.listarPedidosActivos(idPartida);
+        pedidosActuales = juegoService.listarPedidosActivos(idPartida);
 
-        for (Pedido pedido : pedidos) {
+        for (Pedido pedido : pedidosActuales) {
             Object[] fila = new Object[4];
             fila[0] = pedido.getIdPedido();
             fila[1] = pedido.getEstadoActual().name();
@@ -375,7 +427,7 @@ public class JuegoFrame extends javax.swing.JFrame {
         btnRefrescar = new javax.swing.JButton();
         btnFinalizarPartida = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitulo.setText("Pizza Express Tycoon - Juego");
 
@@ -452,64 +504,57 @@ public class JuegoFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(226, 226, 226)
-                .addComponent(lblTitulo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblEstado)
+                    .addComponent(lblTiempoGlobal)
+                    .addComponent(lblJugador)
+                    .addComponent(lblPuntaje)
+                    .addComponent(lblNivel)
+                    .addComponent(lblPartida))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblEstado)
-                            .addComponent(lblTiempoGlobal)
-                            .addComponent(lblJugador)
-                            .addComponent(lblPuntaje)
-                            .addComponent(lblNivel)
-                            .addComponent(lblPartida))
-                        .addGap(38, 221, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(177, Short.MAX_VALUE)
                         .addComponent(btnAvanzarEstado)
-                        .addGap(34, 34, 34)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
                         .addComponent(btnCancelarPedido)
                         .addGap(36, 36, 36)
                         .addComponent(btnRefrescar)
                         .addGap(31, 31, 31)
                         .addComponent(btnFinalizarPartida))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2))
                 .addContainerGap(195, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(365, 365, 365)
+                .addComponent(lblTitulo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(lblTitulo)
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(67, 67, 67)
                         .addComponent(lblJugador)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(54, 54, 54)
                         .addComponent(lblPartida)
                         .addGap(51, 51, 51)
                         .addComponent(lblNivel)
-                        .addGap(49, 49, 49)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGap(49, 49, 49)
+                        .addComponent(lblPuntaje))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))
+                        .addGap(29, 29, 29)
+                        .addComponent(lblTitulo)
+                        .addGap(28, 28, 28)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblPuntaje)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblTiempoGlobal)
-                        .addGap(41, 41, 41)))
-                .addComponent(lblEstado)
+                        .addGap(41, 41, 41)
+                        .addComponent(lblEstado))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelarPedido)

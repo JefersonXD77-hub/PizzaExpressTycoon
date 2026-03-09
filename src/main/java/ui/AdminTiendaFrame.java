@@ -19,6 +19,8 @@ import dao.ReporteDAO;
 import dto.EstadisticaSucursalDTO;
 import java.io.File;
 import javax.swing.JFileChooser;
+import dao.SucursalDAO;
+import models.Sucursal;
 
 /**
  *
@@ -33,12 +35,14 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
     private Integer idProductoSeleccionado = null;
     private final ReporteDAO reporteDAO = new ReporteDAO();
     private EstadisticaSucursalDTO estadisticasActuales;
+    private final SucursalDAO sucursalDAO = new SucursalDAO();
 
     public AdminTiendaFrame(UsuarioSesionDTO sesion) {
 
         this.sesion = sesion;
         initComponents();
         setLocationRelativeTo(null);
+        getContentPane().setBackground(new java.awt.Color(220, 230, 240));
         setTitle("Admin Tienda - " + sesion.getNickname());
         lblTitulo.setText("Bienvenido: " + sesion.getNickname() + " (" + sesion.getNombreRol() + ")");
         inicializarVista();
@@ -56,13 +60,13 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
         cargarDatosAdmin();
         limpiarFormulario();
         cargarProductos();
-        
+
         lblTotalPartidas.setText("Total partidas: -");
-    lblMejorPuntaje.setText("Mejor puntaje: -");
-    lblPromedioPuntaje.setText("Promedio puntaje: -");
-    lblTotalEntregados.setText("Pedidos entregados: -");
-    lblTotalCancelados.setText("Pedidos cancelados: -");
-    lblTotalNoEntregados.setText("Pedidos no entregados: -");
+        lblMejorPuntaje.setText("Mejor puntaje: -");
+        lblPromedioPuntaje.setText("Promedio puntaje: -");
+        lblTotalEntregados.setText("Pedidos entregados: -");
+        lblTotalCancelados.setText("Pedidos cancelados: -");
+        lblTotalNoEntregados.setText("Pedidos no entregados: -");
     }
 
     private void configurarTabla() {
@@ -80,7 +84,18 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
     private void cargarDatosAdmin() {
         lblTitulo.setText("Administración de Tienda - Productos");
         lblAdmin.setText("Admin: " + sesion.getNickname());
-        lblSucursal.setText("Sucursal ID: " + sesion.getIdSucursal());
+        if (sesion.getIdSucursal() != null) {
+            Sucursal sucursal = sucursalDAO.buscarPorId(sesion.getIdSucursal());
+
+            if (sucursal != null) {
+                lblSucursal.setText("Sucursal: " + sucursal.getNombreSucursal() + " (ID: " + sucursal.getIdSucursal() + ")");
+            } else {
+                lblSucursal.setText("Sucursal ID: " + sesion.getIdSucursal());
+            }
+        } else {
+            lblSucursal.setText("Sucursal: no asignada");
+        }
+
         lblEstado.setText("Estado: listo");
     }
 
@@ -221,8 +236,9 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
         lblTotalNoEntregados = new javax.swing.JLabel();
         btnCargarEstadisticas = new javax.swing.JButton();
         btnExportarCSV = new javax.swing.JButton();
+        btnCerrarSesion = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitulo.setText("Bienvenid@ ");
 
@@ -256,7 +272,7 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
 
         chkProductoActivo.setText("Producto Activo");
 
-        btnNuevoProducto.setText("Nuevo Producto");
+        btnNuevoProducto.setText("Limpiar/Nuevo");
         btnNuevoProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNuevoProductoActionPerformed(evt);
@@ -328,6 +344,13 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
             }
         });
 
+        btnCerrarSesion.setText("Cerrar Sesion");
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -354,9 +377,12 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnGuardarProducto))))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(308, 308, 308)
-                                .addComponent(lblTitulo)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(84, 84, 84)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblEstado)
+                                    .addComponent(lblSucursal)
+                                    .addComponent(lblAdmin))))
+                        .addContainerGap(164, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -364,11 +390,8 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblEstado)
                                     .addComponent(lblTotalPartidas)
-                                    .addComponent(lblMejorPuntaje)
-                                    .addComponent(lblSucursal)
-                                    .addComponent(lblAdmin))
+                                    .addComponent(lblMejorPuntaje))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblPromedioPuntaje)
@@ -386,11 +409,21 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
                             .addComponent(btnExportarCSV, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnCargarEstadisticas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(24, 24, 24))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(221, 221, 221)
+                .addComponent(lblTitulo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addContainerGap()
+                .addComponent(btnCerrarSesion)
+                .addGap(4, 4, 4)
                 .addComponent(lblTitulo)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -403,13 +436,13 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
                         .addComponent(btnVerRankingSucursal)
                         .addGap(18, 18, 18)
                         .addComponent(btnCambiarEstadoProducto)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblAdmin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblSucursal)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblEstado)
-                .addGap(19, 19, 19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
@@ -542,7 +575,7 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnActualizarProductoActionPerformed
 
     private void btnCargarEstadisticasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarEstadisticasActionPerformed
-        
+
         try {
             cargarEstadisticasSucursal();
         } catch (Exception e) {
@@ -554,37 +587,41 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
 
     private void btnExportarCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarCSVActionPerformed
 
-        JOptionPane.showMessageDialog(this, "Entró al evento Exportar CSV");
-        
         try {
-        List<RankingJugadorDTO> ranking = juegoService.obtenerRankingPorSucursal(sesion.getIdSucursal(), 100);
+            List<RankingJugadorDTO> ranking = juegoService.obtenerRankingPorSucursal(sesion.getIdSucursal(), 100);
 
-        if (estadisticasActuales == null) {
-            estadisticasActuales = reporteDAO.obtenerEstadisticasSucursal(sesion.getIdSucursal());
+            if (estadisticasActuales == null) {
+                estadisticasActuales = reporteDAO.obtenerEstadisticasSucursal(sesion.getIdSucursal());
+            }
+
+            String rutaRanking = elegirRutaCSV("ranking_sucursal_" + sesion.getIdSucursal() + ".csv");
+            if (rutaRanking == null) {
+                return;
+            }
+
+            String rutaEstadisticas = elegirRutaCSV("estadisticas_sucursal_" + sesion.getIdSucursal() + ".csv");
+            if (rutaEstadisticas == null) {
+                return;
+            }
+
+            reporteDAO.exportarRankingSucursalCSV(rutaRanking, ranking);
+            reporteDAO.exportarEstadisticasSucursalCSV(rutaEstadisticas, estadisticasActuales);
+
+            lblEstado.setText("Estado: CSV exportado");
+            JOptionPane.showMessageDialog(this, "Archivos CSV exportados.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error exportando CSV: " + e.getMessage());
         }
-
-        String rutaRanking = elegirRutaCSV("ranking_sucursal_" + sesion.getIdSucursal() + ".csv");
-        if (rutaRanking == null) {
-            return;
-        }
-
-        String rutaEstadisticas = elegirRutaCSV("estadisticas_sucursal_" + sesion.getIdSucursal() + ".csv");
-        if (rutaEstadisticas == null) {
-            return;
-        }
-
-        reporteDAO.exportarRankingSucursalCSV(rutaRanking, ranking);
-        reporteDAO.exportarEstadisticasSucursalCSV(rutaEstadisticas, estadisticasActuales);
-
-        lblEstado.setText("Estado: CSV exportado correctamente");
-        JOptionPane.showMessageDialog(this, "Archivos CSV exportados correctamente.");
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error exportando CSV: " + e.getMessage());
-    }
 
     }//GEN-LAST:event_btnExportarCSVActionPerformed
+
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+        new LoginFrame().setVisible(true);
+        this.dispose();
+
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -625,6 +662,7 @@ public class AdminTiendaFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnActualizarProducto;
     private javax.swing.JButton btnCambiarEstadoProducto;
     private javax.swing.JButton btnCargarEstadisticas;
+    private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnExportarCSV;
     private javax.swing.JButton btnGuardarProducto;
     private javax.swing.JButton btnNuevoProducto;

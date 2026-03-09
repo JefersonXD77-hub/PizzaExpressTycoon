@@ -25,6 +25,7 @@ public class EstadisticasGlobalesFrame extends javax.swing.JFrame {
         this.sesion = sesion;
         initComponents();
         setLocationRelativeTo(null);
+        getContentPane().setBackground(new java.awt.Color(220, 230, 240));
         inicializarVista();
     }
 
@@ -76,7 +77,7 @@ public class EstadisticasGlobalesFrame extends javax.swing.JFrame {
         lblTotalSucursales = new javax.swing.JLabel();
         btnRefrescarEstadisticasGlobales = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitulo.setText("Titulo");
 

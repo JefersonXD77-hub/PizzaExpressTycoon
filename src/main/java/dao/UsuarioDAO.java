@@ -30,7 +30,7 @@ public class UsuarioDAO {
 
             try ( ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Integer idSucursal = (Integer) rs.getObject("idSucursal"); // soporta NULL
+                    Integer idSucursal = (Integer) rs.getObject("idSucursal"); 
                     return new UsuarioSesionDTO(
                             rs.getInt("idUsuario"),
                             rs.getString("nickname"),

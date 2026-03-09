@@ -127,8 +127,10 @@ public class GestionParametrosFrame extends javax.swing.JFrame {
         btnLimpiarSeleccion = new javax.swing.JButton();
         btnActualizarParametro = new javax.swing.JButton();
         btnRefrescarParametros = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblTitulo.setText("Titulo");
 
@@ -178,12 +180,16 @@ public class GestionParametrosFrame extends javax.swing.JFrame {
             }
         });
 
-        btnRefrescarParametros.setText("Refrescar Parámetros");
+        btnRefrescarParametros.setText("Referscar Vista");
         btnRefrescarParametros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRefrescarParametrosActionPerformed(evt);
             }
         });
+
+        jLabel1.setText("Nivel Seleccionado:");
+
+        jLabel2.setText("Tiempo Base Del Nivel: ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -201,9 +207,15 @@ public class GestionParametrosFrame extends javax.swing.JFrame {
                             .addComponent(btnLimpiarSeleccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblAdmin)
-                            .addComponent(lblEstado))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblAdmin)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblEstado)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2)))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtNivel)
                             .addComponent(txtTiempoBase, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))))
@@ -229,11 +241,13 @@ public class GestionParametrosFrame extends javax.swing.JFrame {
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblAdmin)
-                            .addComponent(txtNivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtNivel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblEstado)
-                            .addComponent(txtTiempoBase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtTiempoBase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
                         .addGap(33, 33, 33)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(27, Short.MAX_VALUE))
@@ -288,8 +302,8 @@ public class GestionParametrosFrame extends javax.swing.JFrame {
 
     private void btnLimpiarSeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarSeleccionActionPerformed
 
-       limpiarFormulario();
-    lblEstado.setText("Estado: selección limpiada");
+        limpiarFormulario();
+        lblEstado.setText("Estado: selección limpiada");
 
     }//GEN-LAST:event_btnLimpiarSeleccionActionPerformed
 
@@ -332,6 +346,8 @@ public class GestionParametrosFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnActualizarParametro;
     private javax.swing.JButton btnLimpiarSeleccion;
     private javax.swing.JButton btnRefrescarParametros;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAdmin;
     private javax.swing.JLabel lblEstado;
